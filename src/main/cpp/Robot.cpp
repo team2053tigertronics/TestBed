@@ -80,7 +80,7 @@ void Robot::TeleopPeriodic() {
     }
 
     if(m_stick.GetYButtonPressed()) {
-        SetPoint = 2000;
+        SetPoint = 6000;
     }
     if(m_stick.GetAButtonPressed()) {
         otherSet = 0;
