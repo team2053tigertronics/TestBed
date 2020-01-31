@@ -121,7 +121,7 @@ void Robot::TeleopPeriodic() {
     }
 
     shooterMotorRight.Set(ctre::phoenix::motorcontrol::ControlMode::Velocity, (int)ConvertRPMToTicksPer100Ms(SetPoint));
-    intakeMotor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, otherSet);
+    intakeMotor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, -otherSet);
     feederMotor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, feederSet);
     conveyorMotor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, conveyorSet);
 
