@@ -15,6 +15,8 @@
 #include <ctre/phoenix/motorcontrol/can/TalonFX.h>
 #include <ctre/phoenix/motorcontrol/can/TalonSRX.h>
 #include <frc/XboxController.h>
+#include "ContinuousServo.h"
+#include <frc/Encoder.h>
 
 class Robot : public frc::TimedRobot {
  public:
@@ -27,11 +29,11 @@ class Robot : public frc::TimedRobot {
   void TestPeriodic() override;
 
  private:
-  static const int shooterMotorLeftID = 4;
-  static const int shooterMotorRightID = 26;
+  static const int shooterMotorLeftID = 10;
+  static const int shooterMotorRightID = 11;
 
   static const int conveyorMotorID = 3;
-  static const int feederMotorID = 14;
+  static const int feederMotorID = 15;
   static const int intakeMotorID = 13;
 
   ctre::phoenix::motorcontrol::can::TalonFX shooterMotorLeft{shooterMotorLeftID};
@@ -50,6 +52,12 @@ class Robot : public frc::TimedRobot {
   double conveyorSet = 0;
   double sensorResolution = 2048;
   double gearRatio = 1.0/2.0;
+
+  
+  ContinuousServo hoodServo{1};
+  frc::Encoder hoodEncoder{2, 3};
+
+  void SetServoSpeed(double percent);
 
   int ConvertRPMToTicksPer100Ms(double rpm);
   double ConvertTicksPer100MsToRPM(int ticksPer100ms);

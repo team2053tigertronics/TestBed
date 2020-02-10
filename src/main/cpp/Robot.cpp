@@ -37,6 +37,8 @@ void Robot::RobotInit() {
     frc::SmartDashboard::PutNumber("Max Output", kMaxOutput);
     frc::SmartDashboard::PutNumber("Min Output", kMinOutput);
 
+    hoodEncoder.Reset();
+
     SetPoint = 0.0;
     otherSet = 0.0;
     conveyorSet = 0.0;
@@ -111,23 +113,27 @@ void Robot::TeleopPeriodic() {
     if(leftPressed) 
     {
       //m_feederMotor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 1);
+      SetServoSpeed(1.0);
     }
     if(rightPressed)
     {
       //m_feederMotor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, -1);
+      SetServoSpeed(-1.0);
     }
     if(!leftPressed && !rightPressed) {
       //m_feederMotor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0);
+      SetServoSpeed(0.0);
     }
 
     shooterMotorRight.Set(ctre::phoenix::motorcontrol::ControlMode::Velocity, (int)ConvertRPMToTicksPer100Ms(SetPoint));
-    intakeMotor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, -otherSet);
+    //intakeMotor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, -otherSet);
     feederMotor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, feederSet);
-    conveyorMotor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, conveyorSet);
+    //conveyorMotor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, conveyorSet);
 
     frc::SmartDashboard::PutNumber("Commanded Shooter Velocity", SetPoint);
     frc::SmartDashboard::PutNumber("Left Motor Velocity", ConvertTicksPer100MsToRPM(shooterMotorLeft.GetSelectedSensorVelocity()));
     frc::SmartDashboard::PutNumber("Right Motor Velocity", ConvertTicksPer100MsToRPM(shooterMotorRight.GetSelectedSensorVelocity()));
+    frc::SmartDashboard::PutNumber("Encoder", hoodEncoder.GetDistance());
 }
 
 void Robot::TestPeriodic() {
@@ -140,6 +146,10 @@ int Robot::ConvertRPMToTicksPer100Ms(double rpm) {
 
 double Robot::ConvertTicksPer100MsToRPM(int ticksPer100ms) {
     return (ticksPer100ms * 600) / sensorResolution;
+}
+
+void Robot::SetServoSpeed(double percent) {
+    hoodServo.Set(std::clamp(percent, -1.0, 1.0));
 }
 
 #ifndef RUNNING_FRC_TESTS
