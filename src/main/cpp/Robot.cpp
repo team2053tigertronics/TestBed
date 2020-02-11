@@ -36,6 +36,7 @@ void Robot::RobotInit() {
     frc::SmartDashboard::PutNumber("Feed Forward", kFF);
     frc::SmartDashboard::PutNumber("Max Output", kMaxOutput);
     frc::SmartDashboard::PutNumber("Min Output", kMinOutput);
+    frc::SmartDashboard::PutNumber("Servo Value", kServoValue);
 
     hoodEncoder.Reset();
 
@@ -84,14 +85,14 @@ void Robot::TeleopPeriodic() {
     if(m_stick.GetYButtonPressed()) {
         SetPoint = SetPoint + 500;
     }
-    if(m_stick.GetAButtonPressed()) {
+    /*if(m_stick.GetAButtonPressed()) {
         otherSet = 0;
         conveyorSet = 0;
-    }
-    if(m_stick.GetBButtonPressed()) {
+    }*/
+    /*if(m_stick.GetBButtonPressed()) {
         otherSet = .5;
         conveyorSet = .5;
-    }
+    }*/
     if(m_stick.GetXButtonPressed()) {
         SetPoint = 0;
     }
@@ -108,21 +109,25 @@ void Robot::TeleopPeriodic() {
         SetPoint = 0;
     }
 
-    bool leftPressed = m_stick.GetBumper(frc::XboxController::JoystickHand::kLeftHand);
-    bool rightPressed = m_stick.GetBumper(frc::XboxController::JoystickHand::kRightHand);
-    if(leftPressed) 
+    //bool leftPressed = m_stick.GetBumper(frc::XboxController::JoystickHand::kLeftHand);
+    //bool rightPressed = m_stick.GetBumper(frc::XboxController::JoystickHand::kRightHand);
+    if(m_stick.GetAButtonPressed()) 
     {
       //m_feederMotor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 1);
-      SetServoSpeed(1.0);
+      kServoValue = .9;
+      SetServoSpeed(kServoValue);
+
     }
-    if(rightPressed)
+    if(m_stick.GetBButtonPressed())
     {
       //m_feederMotor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, -1);
-      SetServoSpeed(-1.0);
+      kServoValue = -.9;
+      SetServoSpeed(kServoValue);
     }
-    if(!leftPressed && !rightPressed) {
+    if(!m_stick.GetAButtonPressed() && !m_stick.GetBButtonPressed()) {
       //m_feederMotor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0);
-      SetServoSpeed(0.0);
+      kServoValue = 0;
+      SetServoSpeed(kServoValue);
     }
 
     shooterMotorRight.Set(ctre::phoenix::motorcontrol::ControlMode::Velocity, (int)ConvertRPMToTicksPer100Ms(SetPoint));

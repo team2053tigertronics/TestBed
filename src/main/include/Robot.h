@@ -52,10 +52,13 @@ class Robot : public frc::TimedRobot {
   double conveyorSet = 0;
   double sensorResolution = 2048;
   double gearRatio = 1.0/2.0;
+  double kServoValue = 0;
 
   
   ContinuousServo hoodServo{1};
   frc::Encoder hoodEncoder{2, 3};
+
+  
 
   void SetServoSpeed(double percent);
 
