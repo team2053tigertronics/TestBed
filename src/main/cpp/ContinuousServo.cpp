@@ -10,7 +10,9 @@
 
 ContinuousServo::ContinuousServo(int channel) : frc::PWMSpeedController(channel) {
     SetBounds(1.9, 1.89, 1.550, 1.11, 1.1);
-    SetPeriodMultiplier(frc::PWMSpeedController::kPeriodMultiplier_1X);
+    SetPeriodMultiplier(frc::PWMSpeedController::kPeriodMultiplier_4X);
+    frc::PWM::
     SetSpeed(0.0);
-    SetZeroLatch();
+    derp = 0;
+    //SetZeroLatch();
 }

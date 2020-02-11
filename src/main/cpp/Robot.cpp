@@ -85,6 +85,9 @@ void Robot::TeleopPeriodic() {
     if(m_stick.GetYButtonPressed()) {
         SetPoint = SetPoint + 500;
     }
+    if(m_stick.GetAButtonPressed()) {
+        kServoValue = kServoValue + 0.1;
+    }
     /*if(m_stick.GetAButtonPressed()) {
         otherSet = 0;
         conveyorSet = 0;
@@ -107,8 +110,10 @@ void Robot::TeleopPeriodic() {
         feederSet = 0;
         otherSet = 0;
         SetPoint = 0;
+        kServoValue = 0;
     }
 
+/*
     //bool leftPressed = m_stick.GetBumper(frc::XboxController::JoystickHand::kLeftHand);
     //bool rightPressed = m_stick.GetBumper(frc::XboxController::JoystickHand::kRightHand);
     if(m_stick.GetAButtonPressed()) 
@@ -118,18 +123,19 @@ void Robot::TeleopPeriodic() {
       SetServoSpeed(kServoValue);
 
     }
-    if(m_stick.GetBButtonPressed())
+    else if(m_stick.GetBButtonPressed())
     {
       //m_feederMotor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, -1);
       kServoValue = -.9;
       SetServoSpeed(kServoValue);
     }
-    if(!m_stick.GetAButtonPressed() && !m_stick.GetBButtonPressed()) {
+    else {
       //m_feederMotor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0);
-      kServoValue = 0;
+      kServoValue = .1;
       SetServoSpeed(kServoValue);
     }
-
+    */
+    SetServoSpeed(kServoValue);
     shooterMotorRight.Set(ctre::phoenix::motorcontrol::ControlMode::Velocity, (int)ConvertRPMToTicksPer100Ms(SetPoint));
     //intakeMotor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, -otherSet);
     feederMotor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, feederSet);
@@ -155,8 +161,9 @@ double Robot::ConvertTicksPer100MsToRPM(int ticksPer100ms) {
 
 void Robot::SetServoSpeed(double percent) {
     frc::SmartDashboard::PutNumber("INSIDE LOOP: PERCENT", percent);
-    frc::SmartDashboard::PutNumber("INSIDE LOOP: SERVO COMMAND", )
     hoodServo.Set(std::clamp(percent, -1.0, 1.0));
+    hoodServo.derp++;
+    frc::SmartDashboard::PutNumber("DERP: ", hoodServo.derp);
 }
 
 #ifndef RUNNING_FRC_TESTS

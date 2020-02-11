@@ -14,4 +14,6 @@ class ContinuousServo : public frc::PWMSpeedController {
   explicit ContinuousServo(int channel);
   ContinuousServo(ContinuousServo&&) = default;
   ContinuousServo& operator=(ContinuousServo&&) = default;
+  
+  int derp = 0;
 };
