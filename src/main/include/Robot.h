@@ -17,6 +17,7 @@
 #include <frc/XboxController.h>
 #include "ContinuousServo.h"
 #include <frc/Encoder.h>
+#include <ctre/phoenix/CANifier.h>
 
 class Robot : public frc::TimedRobot {
  public:
@@ -36,11 +37,15 @@ class Robot : public frc::TimedRobot {
   static const int feederMotorID = 15;
   static const int intakeMotorID = 14;
 
+  static const int canIDEncoder = 22;
+
   ctre::phoenix::motorcontrol::can::TalonFX shooterMotorLeft{shooterMotorLeftID};
   ctre::phoenix::motorcontrol::can::TalonFX shooterMotorRight{shooterMotorRightID};
   ctre::phoenix::motorcontrol::can::TalonFX conveyorMotor{conveyorMotorID};
   ctre::phoenix::motorcontrol::can::TalonFX intakeMotor{intakeMotorID};
   ctre::phoenix::motorcontrol::can::TalonSRX feederMotor{feederMotorID};
+
+  ctre::phoenix::CANifier encoderCAN{canIDEncoder};
 
   frc::XboxController m_stick{0};
 

@@ -29,6 +29,9 @@ void Robot::RobotInit() {
     shooterMotorLeft.Follow(shooterMotorRight);
     shooterMotorLeft.SetInverted(true);
 
+    encoderCAN.ConfigFactoryDefault();
+    encoderCAN.SetQuadraturePosition(0);
+
     frc::SmartDashboard::PutNumber("P Gain", kP);
     frc::SmartDashboard::PutNumber("I Gain", kI);
     frc::SmartDashboard::PutNumber("D Gain", kD);
@@ -81,6 +84,8 @@ void Robot::TeleopPeriodic() {
       shooterMotorRight.ConfigPeakOutputReverse(min);
       kMinOutput = min; kMaxOutput = max; 
     }
+
+    frc::SmartDashboard::PutNumber("CAN ENCODER", encoderCAN.GetQuadraturePosition());
 
     if(m_stick.GetYButtonPressed()) {
         SetPoint = SetPoint + 500;
@@ -155,7 +160,7 @@ double Robot::ConvertTicksPer100MsToRPM(int ticksPer100ms) {
 
 void Robot::SetServoSpeed(double percent) {
     frc::SmartDashboard::PutNumber("INSIDE LOOP: PERCENT", percent);
-    frc::SmartDashboard::PutNumber("INSIDE LOOP: SERVO COMMAND", )
+    //frc::SmartDashboard::PutNumber("INSIDE LOOP: SERVO COMMAND", )
     hoodServo.Set(std::clamp(percent, -1.0, 1.0));
 }
 
