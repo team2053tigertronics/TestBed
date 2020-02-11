@@ -154,6 +154,8 @@ double Robot::ConvertTicksPer100MsToRPM(int ticksPer100ms) {
 }
 
 void Robot::SetServoSpeed(double percent) {
+    frc::SmartDashboard::PutNumber("INSIDE LOOP: PERCENT", percent);
+    frc::SmartDashboard::PutNumber("INSIDE LOOP: SERVO COMMAND", )
     hoodServo.Set(std::clamp(percent, -1.0, 1.0));
 }
 
