@@ -29,12 +29,12 @@ class Robot : public frc::TimedRobot {
   void TestPeriodic() override;
 
  private:
-  static const int shooterMotorLeftID = 10;
-  static const int shooterMotorRightID = 11;
+  static const int shooterMotorLeftID = 11;
+  static const int shooterMotorRightID = 10;
 
   static const int conveyorMotorID = 3;
   static const int feederMotorID = 15;
-  static const int intakeMotorID = 13;
+  static const int intakeMotorID = 14;
 
   ctre::phoenix::motorcontrol::can::TalonFX shooterMotorLeft{shooterMotorLeftID};
   ctre::phoenix::motorcontrol::can::TalonFX shooterMotorRight{shooterMotorRightID};
