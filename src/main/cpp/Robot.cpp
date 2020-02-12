@@ -86,12 +86,16 @@ void Robot::TeleopPeriodic() {
     }
 
     frc::SmartDashboard::PutNumber("CAN ENCODER", encoderCAN.GetQuadraturePosition());
-
+    frc::SmartDashboard::PutNumber("REAL VALUE", hoodEncoder.Get());
+    
     if(m_stick.GetYButtonPressed()) {
         SetPoint = SetPoint + 500;
     }
     if(m_stick.GetAButtonPressed()) {
-        kServoValue = kServoValue + 0.1;
+        kServoValue = kServoValue + .1;
+    }
+    if(m_stick.GetBButtonPressed()) {
+        kServoValue = kServoValue - .1;
     }
     /*if(m_stick.GetAButtonPressed()) {
         otherSet = 0;
@@ -140,7 +144,8 @@ void Robot::TeleopPeriodic() {
       SetServoSpeed(kServoValue);
     }
     */
-    SetServoSpeed(kServoValue);
+    //SetServoSpeed(kServoValue);
+    hoodServo.Set(kServoValue);
     shooterMotorRight.Set(ctre::phoenix::motorcontrol::ControlMode::Velocity, (int)ConvertRPMToTicksPer100Ms(SetPoint));
     //intakeMotor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, -otherSet);
     feederMotor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, feederSet);
@@ -167,9 +172,9 @@ double Robot::ConvertTicksPer100MsToRPM(int ticksPer100ms) {
 void Robot::SetServoSpeed(double percent) {
     frc::SmartDashboard::PutNumber("INSIDE LOOP: PERCENT", percent);
     //frc::SmartDashboard::PutNumber("INSIDE LOOP: SERVO COMMAND", )
-    hoodServo.Set(std::clamp(percent, -1.0, 1.0));
-    hoodServo.derp++;
-    frc::SmartDashboard::PutNumber("DERP: ", hoodServo.derp);
+    hoodServo.Set(percent);
+    //hoodServo.derp++;
+    //frc::SmartDashboard::PutNumber("DERP: ", hoodServo.derp);
 }
 
 #ifndef RUNNING_FRC_TESTS

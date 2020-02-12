@@ -5,14 +5,14 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-#include "ContinuousServo.h"
 #include "frc/smartdashboard/SendableRegistry.h"
+#include "ContinuousServo.h"
 
 ContinuousServo::ContinuousServo(int channel) : frc::PWMSpeedController(channel) {
     SetBounds(1.9, 1.89, 1.550, 1.11, 1.1);
     SetPeriodMultiplier(frc::PWMSpeedController::kPeriodMultiplier_4X);
-    frc::PWM::
     SetSpeed(0.0);
     derp = 0;
     //SetZeroLatch();
 }
+

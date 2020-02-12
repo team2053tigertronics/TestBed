@@ -10,14 +10,13 @@
 #include <string>
 
 #include <frc/TimedRobot.h>
-
 #include <frc/smartdashboard/SmartDashboard.h>
 #include <ctre/phoenix/motorcontrol/can/TalonFX.h>
 #include <ctre/phoenix/motorcontrol/can/TalonSRX.h>
 #include <frc/XboxController.h>
-#include "ContinuousServo.h"
 #include <frc/Encoder.h>
 #include <ctre/phoenix/CANifier.h>
+#include "ContinuousServo.h"
 
 class Robot : public frc::TimedRobot {
  public:
@@ -58,7 +57,6 @@ class Robot : public frc::TimedRobot {
   double sensorResolution = 2048;
   double gearRatio = 1.0/2.0;
   double kServoValue = 0;
-
   
   ContinuousServo hoodServo{1};
   frc::Encoder hoodEncoder{2, 3};
