@@ -16,6 +16,7 @@
 #include <frc/XboxController.h>
 #include <frc/Encoder.h>
 #include <ctre/phoenix/CANifier.h>
+#include <frc/controller/PIDController.h>
 #include "ContinuousServo.h"
 
 class Robot : public frc::TimedRobot {
@@ -49,6 +50,7 @@ class Robot : public frc::TimedRobot {
   frc::XboxController m_stick{0};
 
   double kP = 6e-5, kI = 1e-6, kD = 0, kIz = 0, kFF = 0.000015, kMaxOutput = 1.0, kMinOutput = -1.0;
+  double hoodP = 1, hoodI = 0, hoodD = 0;
   const double MaxRPM = 6380;
   double SetPoint = 0;
   double otherSet = 0;
@@ -59,12 +61,9 @@ class Robot : public frc::TimedRobot {
   double kServoValue = 0;
   
   ContinuousServo hoodServo{1};
-  frc::Encoder hoodEncoder{2, 3};
-
-  
+  frc2::PIDController hoodController{hoodP, hoodI, hoodD};
 
   void SetServoSpeed(double percent);
-
   int ConvertRPMToTicksPer100Ms(double rpm);
   double ConvertTicksPer100MsToRPM(int ticksPer100ms);
 };

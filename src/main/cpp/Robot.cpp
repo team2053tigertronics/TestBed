@@ -8,7 +8,19 @@
 #include "Robot.h"
 
 #include <iostream>
+#include <algorithm>
 
+int ENCODER_MAX_VAL = 1000; //CHANGE ME
+
+double map(double input_start, double input_end, double output_start, double output_end, double input) {
+    double slope = 1.0 * (output_end - output_start) / (input_end - input_start);
+    double output = output_start + slope * (input - input_start);
+    return output;
+}
+
+double GetHoodAngle(double encoderVal) {
+    return map(0, ENCODER_MAX_VAL, 0, 90, encoderVal);
+}
 
 void Robot::RobotInit() {
     shooterMotorLeft.ConfigFactoryDefault();
@@ -40,8 +52,9 @@ void Robot::RobotInit() {
     frc::SmartDashboard::PutNumber("Max Output", kMaxOutput);
     frc::SmartDashboard::PutNumber("Min Output", kMinOutput);
     frc::SmartDashboard::PutNumber("Servo Value", kServoValue);
-
-    hoodEncoder.Reset();
+    frc::SmartDashboard::PutNumber("Hood P", hoodP);
+    frc::SmartDashboard::PutNumber("Hood I", hoodI);
+    frc::SmartDashboard::PutNumber("Hood D", hoodD);
 
     SetPoint = 0.0;
     otherSet = 0.0;
@@ -73,6 +86,9 @@ void Robot::TeleopPeriodic() {
     double ff = frc::SmartDashboard::GetNumber("Feed Forward", 0);
     double max = frc::SmartDashboard::GetNumber("Max Output", 0);
     double min = frc::SmartDashboard::GetNumber("Min Output", 0);
+    double hoodp = frc::SmartDashboard::GetNumber("Hood P", 0);
+    double hoodi = frc::SmartDashboard::GetNumber("Hood I", 0);
+    double hoodd = frc::SmartDashboard::GetNumber("Hood D", 0);
 
     if((p != kP)) { shooterMotorRight.Config_kP(0, p); kP = p; }
     if((i != kI)) { shooterMotorRight.Config_kI(0, i); kI = i; }
@@ -84,10 +100,12 @@ void Robot::TeleopPeriodic() {
       shooterMotorRight.ConfigPeakOutputReverse(min);
       kMinOutput = min; kMaxOutput = max; 
     }
+    if((hoodp != hoodP)) { hoodController.SetP(hoodp); hoodP = hoodp; }
+    if((hoodi != hoodI)) { hoodController.SetI(hoodi); hoodI = hoodi; }
+    if((hoodd != hoodD)) { hoodController.SetD(hoodd); hoodD = hoodd; }
 
-    frc::SmartDashboard::PutNumber("CAN ENCODER", encoderCAN.GetQuadraturePosition());
-    frc::SmartDashboard::PutNumber("REAL VALUE", hoodEncoder.Get());
-    
+    int currentEncoderVal = encoderCAN.GetQuadraturePosition();
+
     if(m_stick.GetYButtonPressed()) {
         SetPoint = SetPoint + 500;
     }
@@ -145,16 +163,27 @@ void Robot::TeleopPeriodic() {
     }
     */
     //SetServoSpeed(kServoValue);
-    hoodServo.Set(kServoValue);
+
+    //THIS HAS TO BE CALLED EVERY LOOP YOU DINGUS
+    //MEANING DONT PUT THIS IS AN IF STATEMENT
+    double pidoutput = hoodController.Calculate(GetHoodAngle(currentEncoderVal));
+    if(m_stick.GetBumper(frc::XboxController::kLeftHand)) {
+        hoodServo.Set(std::clamp(pidoutput, -1.0, 1.0));
+    }
+    else {
+        hoodServo.Set(kServoValue);
+    }
+    //hoodServo.Set(kServoValue);
     shooterMotorRight.Set(ctre::phoenix::motorcontrol::ControlMode::Velocity, (int)ConvertRPMToTicksPer100Ms(SetPoint));
     //intakeMotor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, -otherSet);
     feederMotor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, feederSet);
     //conveyorMotor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, conveyorSet);
 
+    frc::SmartDashboard::PutNumber("CAN ENCODER", currentEncoderVal);
     frc::SmartDashboard::PutNumber("Commanded Shooter Velocity", SetPoint);
     frc::SmartDashboard::PutNumber("Left Motor Velocity", ConvertTicksPer100MsToRPM(shooterMotorLeft.GetSelectedSensorVelocity()));
     frc::SmartDashboard::PutNumber("Right Motor Velocity", ConvertTicksPer100MsToRPM(shooterMotorRight.GetSelectedSensorVelocity()));
-    frc::SmartDashboard::PutNumber("Encoder", hoodEncoder.GetDistance());
+    frc::SmartDashboard::PutNumber("Hood Angle", GetHoodAngle(currentEncoderVal));
 }
 
 void Robot::TestPeriodic() {
