@@ -55,11 +55,13 @@ void Robot::RobotInit() {
     frc::SmartDashboard::PutNumber("Hood P", hoodP);
     frc::SmartDashboard::PutNumber("Hood I", hoodI);
     frc::SmartDashboard::PutNumber("Hood D", hoodD);
+    frc::SmartDashboard::PutNumber("Hood Setpoint", hoodSetpoint);
 
     SetPoint = 0.0;
     otherSet = 0.0;
     conveyorSet = 0.0;
     feederSet = 0.0;
+    hoodSetpoint = 0.0;
 }
 
 void Robot::RobotPeriodic() {
@@ -89,6 +91,7 @@ void Robot::TeleopPeriodic() {
     double hoodp = frc::SmartDashboard::GetNumber("Hood P", 0);
     double hoodi = frc::SmartDashboard::GetNumber("Hood I", 0);
     double hoodd = frc::SmartDashboard::GetNumber("Hood D", 0);
+    double hoodset = frc::SmartDashboard::GetNumber("Hood Setpoint", 0);
 
     if((p != kP)) { shooterMotorRight.Config_kP(0, p); kP = p; }
     if((i != kI)) { shooterMotorRight.Config_kI(0, i); kI = i; }
@@ -103,6 +106,7 @@ void Robot::TeleopPeriodic() {
     if((hoodp != hoodP)) { hoodController.SetP(hoodp); hoodP = hoodp; }
     if((hoodi != hoodI)) { hoodController.SetI(hoodi); hoodI = hoodi; }
     if((hoodd != hoodD)) { hoodController.SetD(hoodd); hoodD = hoodd; }
+    if((hoodset != hoodSetpoint)) { hoodController.SetSetpoint(hoodset); hoodSetpoint = hoodset; }
 
     int currentEncoderVal = encoderCAN.GetQuadraturePosition();
 
