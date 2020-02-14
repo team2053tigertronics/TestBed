@@ -10,7 +10,7 @@
 #include <iostream>
 #include <algorithm>
 
-int ENCODER_MAX_VAL = 1000; //CHANGE ME
+int ENCODER_MAX_VAL = 16585; //CHANGE ME
 
 double map(double input_start, double input_end, double output_start, double output_end, double input) {
     double slope = 1.0 * (output_end - output_start) / (input_end - input_start);
